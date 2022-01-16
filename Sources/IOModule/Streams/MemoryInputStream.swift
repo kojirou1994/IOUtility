@@ -1,7 +1,7 @@
 import Foundation
 import SystemPackage
 
-extension RegionRead where Self: Seek, Region: DataProtocol {
+extension RegionRead where Self: Seek, Region.Element == UInt8, Region.SubSequence: ContiguousBytes {
   mutating func readAsMemoryStream(exactly count: Int) throws -> MemoryInputStream<Region> {
     try seekBackOnError { v in
       let region = try v.read(upToCount: count)
@@ -13,7 +13,7 @@ extension RegionRead where Self: Seek, Region: DataProtocol {
   }
 }
 
-public struct MemoryInputStream<C: DataProtocol> {
+public struct MemoryInputStream<C> where C: Collection, C.Element == UInt8, C.SubSequence: ContiguousBytes {
 
   public private(set) var currentIndex: C.Index
 
@@ -35,7 +35,7 @@ extension MemoryInputStream: RandomRead {
     }
 
     let newIndex = data.index(currentIndex, offsetBy: realCount)
-    let copied = data[currentIndex..<newIndex].copyBytes(to: buffer)
+    let copied = data[currentIndex..<newIndex].withUnsafeBytes { $0.copyBytes(to: buffer) }
     precondition(copied == realCount)
     currentIndex = newIndex
     return copied
@@ -50,7 +50,7 @@ extension MemoryInputStream: RandomRead {
       return 0
     }
 
-    let copied = data[startIndex...].prefix(realCount).copyBytes(to: buffer)
+    let copied = data[startIndex...].prefix(realCount).withUnsafeBytes { $0.copyBytes(to: buffer) }
     precondition(copied == realCount)
     return copied
   }
