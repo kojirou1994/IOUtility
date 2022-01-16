@@ -1,5 +1,5 @@
 public protocol RandomRead: Read {
-  /// this method leaves the file's existing offset unchanged.
+  /// this method leaves the stream's existing offset unchanged.
   mutating func read(fromAbsoluteOffset offset: Int64, into buffer: UnsafeMutableRawBufferPointer/*, retryOnInterrupt: Bool*/) throws -> Int
 }
 
