@@ -17,19 +17,3 @@ extension RegionRead where Self: Read {
     }
   }
 }
-
-extension RegionRead where Self: Read, Self: Seek {
-  public mutating func read(exactly count: Int) throws -> Region where Region == [UInt8] {
-    try .init(unsafeUninitializedCapacity: count) { buffer, initializedCount in
-      try readExactlyOrSeekBack(into: .init(buffer))
-      initializedCount = count
-    }
-  }
-
-  public mutating func read(exactly count: Int) throws -> Region where Region == ContiguousArray<UInt8> {
-    try .init(unsafeUninitializedCapacity: count) { buffer, initializedCount in
-      try readExactlyOrSeekBack(into: .init(buffer))
-      initializedCount = count
-    }
-  }
-}
