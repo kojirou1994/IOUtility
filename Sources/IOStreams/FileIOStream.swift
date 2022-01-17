@@ -27,3 +27,7 @@ public struct FileIOStream: RandomRead, Seek, Write {
   }
 
 }
+
+extension FileIOStream: RegionRead {
+  public typealias Region = [UInt8]
+}
