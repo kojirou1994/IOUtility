@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "BitReader",
+  name: "IOUtility",
   products: [
     .library(name: "BitReader", targets: ["BitReader"]),
     .library(name: "IOModule", targets: ["IOModule"]),
