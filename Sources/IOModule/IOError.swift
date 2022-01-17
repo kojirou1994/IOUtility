@@ -1,4 +1,5 @@
 public enum IOError: Error {
-  case noEnoughBytes
+  case noEnoughBytes(expected: Int, real: Int)
   case seekOverbound
+  case unsupportedSeekOrigin
 }

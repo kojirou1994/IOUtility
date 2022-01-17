@@ -2,9 +2,18 @@ import Endianness
 import SystemPackage
 import BitReader
 
+extension Read {
+  mutating func readExactly(into buffer: UnsafeMutableRawBufferPointer) throws {
+    let length = try read(into: .init(buffer))
+    if length != buffer.count {
+      throw IOError.noEnoughBytes(expected: buffer.count, real: length)
+    }
+  }
+}
+
 extension Read where Self: Seek {
   mutating func readExactlyOrSeekBack(into buffer: UnsafeMutableRawBufferPointer) throws {
-    try seekBackOnError { read in
+    try withSeekingBackOnError { read in
       try read.readExactly(into: buffer)
     }
   }

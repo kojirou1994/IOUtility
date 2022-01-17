@@ -1,5 +1,6 @@
 import Endianness
 import SystemPackage
+import IOModule
 
 public struct FileIOStream: RandomRead, Seek, Write {
 
@@ -17,7 +18,7 @@ public struct FileIOStream: RandomRead, Seek, Write {
     try fd.read(fromAbsoluteOffset: offset, into: buffer)
   }
 
-  public func write(from buffer: UnsafeRawBufferPointer) throws -> Int {
+  public func write(from buffer: UnsafeRawBufferPointer) throws {
     try fd.writeAll(buffer)
   }
 

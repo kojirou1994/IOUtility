@@ -26,8 +26,13 @@ let package = Package(
         .product(name: "Endianness", package: "Endianness"),
         .product(name: "SystemPackage", package: "swift-system"),
       ]),
+    .target(
+      name: "IOStreams",
+      dependencies: [
+        "IOModule",
+      ]),
     .testTarget(
       name: "IOModuleTests",
-      dependencies: ["IOModule"]),
+      dependencies: ["IOModule", "IOStreams"]),
   ]
 )

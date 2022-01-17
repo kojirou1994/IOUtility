@@ -1,12 +1,13 @@
 import Foundation
 import SystemPackage
+import IOModule
 
 extension RegionRead where Self: Seek, Region.Element == UInt8, Region.SubSequence: ContiguousBytes {
   mutating func readAsMemoryStream(exactly count: Int) throws -> MemoryInputStream<Region> {
-    try seekBackOnError { v in
+    try withSeekingBackOnError { v in
       let region = try v.read(upToCount: count)
       if region.count != count {
-        throw IOError.noEnoughBytes
+        throw IOError.noEnoughBytes(expected: count, real: region.count)
       }
       return .init(region)
     }
