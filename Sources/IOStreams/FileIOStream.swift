@@ -18,8 +18,8 @@ public struct FileIOStream: RandomRead, Seek, Write {
     try fd.read(fromAbsoluteOffset: offset, into: buffer)
   }
 
-  public func write(from buffer: UnsafeRawBufferPointer) throws {
-    try fd.writeAll(buffer)
+  public func write(_ buffer: UnsafeRawBufferPointer, retryOnInterrupt: Bool) throws -> Int {
+    try fd.write(buffer, retryOnInterrupt: retryOnInterrupt)
   }
 
   public func seek(offset: Int64, from whence: FileDescriptor.SeekOrigin) throws -> Int64 {

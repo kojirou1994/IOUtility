@@ -7,6 +7,7 @@ let package = Package(
   products: [
     .library(name: "BitReader", targets: ["BitReader"]),
     .library(name: "IOModule", targets: ["IOModule"]),
+    .library(name: "IOStreams", targets: ["IOStreams"]),
   ],
   dependencies: [
      .package(url: "https://github.com/kojirou1994/Endianness.git", from: "1.0.0"),
