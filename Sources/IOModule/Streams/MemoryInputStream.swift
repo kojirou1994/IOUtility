@@ -59,22 +59,22 @@ extension MemoryInputStream: RandomRead {
 extension MemoryInputStream: Seek {
 
   public mutating func seek(offset: Int64, from whence: FileDescriptor.SeekOrigin) throws -> Int64 {
-    let origin: C.Index
+    let originIndex: C.Index
     switch whence {
-    case .start: origin = data.startIndex
-    case .end: origin = data.endIndex
-    case .current: origin = currentIndex
+    case .start: originIndex = data.startIndex
+    case .end: originIndex = data.endIndex
+    case .current: originIndex = currentIndex
     default:
-      fatalError()
+      throw IOError.unsupportedSeekOrigin
     }
-    let newIndex = data.index(origin, offsetBy: Int(offset))
+    let newIndex = data.index(originIndex, offsetBy: Int(offset))
     try check(index: newIndex)
     currentIndex = newIndex
     return numericCast(data.distance(from: data.startIndex, to: currentIndex))
   }
 
   private func check(index: C.Index) throws {
-    if !data.indices.contains(index) {
+    if index < data.startIndex || index > data.endIndex {
       throw IOError.seekOverbound
     }
   }
