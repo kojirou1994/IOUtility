@@ -18,6 +18,10 @@ public extension Seek {
     try seek(offset: 0, from: .current)
   }
 
+  mutating func isAtEnd() throws -> Bool {
+    try currentOffset() == streamLength()
+  }
+
   mutating func skip(_ count: Int) throws {
     _ = try seek(offset: Int64(count), from: .current)
   }

@@ -9,4 +9,9 @@ public extension RegionRead where Self: Seek {
       return result
     }
   }
+
+  mutating func readToEnd() throws -> Region {
+    let count = try streamLength() - currentOffset()
+    return try read(exactly: Int(count))
+  }
 }

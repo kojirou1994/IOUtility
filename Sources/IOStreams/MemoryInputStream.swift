@@ -3,7 +3,7 @@ import SystemPackage
 import IOModule
 
 extension RegionRead where Self: Seek, Region.Element == UInt8, Region.SubSequence: ContiguousBytes {
-  mutating func readAsMemoryStream(exactly count: Int) throws -> MemoryInputStream<Region> {
+  public mutating func readAsMemoryStream(exactly count: Int) throws -> MemoryInputStream<Region> {
     try withSeekingBackOnError { v in
       let region = try v.read(upToCount: count)
       if region.count != count {
@@ -80,4 +80,15 @@ extension MemoryInputStream: Seek {
     }
   }
 
+}
+
+extension MemoryInputStream: RegionRead {
+  public mutating func read(upToCount count: Int) throws -> C.SubSequence {
+    let realCount = min(count, data.distance(from: currentIndex, to: data.endIndex))
+    let region = data[currentIndex...].prefix(realCount)
+    currentIndex = data.index(currentIndex, offsetBy: realCount)
+    return region
+  }
+
+  public typealias Region = C.SubSequence
 }
