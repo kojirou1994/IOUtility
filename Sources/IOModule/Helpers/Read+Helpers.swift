@@ -13,7 +13,7 @@ extension Read {
 
 extension Read where Self: Seek {
   mutating func readExactlyOrSeekBack(into buffer: UnsafeMutableRawBufferPointer) throws {
-    try withSeekingBackOnError { read in
+    try withOffsetUnchangedOnError { read in
       try read.readExactly(into: buffer)
     }
   }

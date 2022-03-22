@@ -1,6 +1,6 @@
 public extension RegionRead where Self: Seek {
   mutating func read(exactly count: Int) throws -> Region {
-    try withSeekingBackOnError { reader in
+    try withOffsetUnchangedOnError { reader in
       let result = try reader.read(upToCount: count)
       let realCount = result.count
       if realCount != count {

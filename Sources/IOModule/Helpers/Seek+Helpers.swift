@@ -26,19 +26,35 @@ public extension Seek {
     _ = try seek(offset: Int64(count), from: .current)
   }
 
-  mutating func withSeekingBackOnError<R>(_ body: (inout Self) throws -> R) throws -> R {
+  mutating func withOffsetUnchangedOnError<R>(_ body: (inout Self) throws -> R) throws -> R {
+    try _withOffsetUnchanged(onErrorOnly: true, body)
+  }
+
+  mutating func withOffsetUnchanged<R>(_ body: (inout Self) throws -> R) throws -> R {
+    try _withOffsetUnchanged(onErrorOnly: false, body)
+  }
+
+  private mutating func _withOffsetUnchanged<R>(onErrorOnly: Bool, _ body: (inout Self) throws -> R) throws -> R {
     let oldPosition = try currentOffset()
+    func seekBack() throws {
+      let fixedPosition = try seek(offset: oldPosition, from: .start)
+      assert(oldPosition == fixedPosition)
+    }
+    let result: R
     do {
-      return try body(&self)
+      result = try body(&self)
     } catch {
       do {
-        let fixedPosition = try seek(offset: oldPosition, from: .start)
-        assert(oldPosition == fixedPosition)
+        try seekBack()
       } catch {
-        assertionFailure("Failed to seek back, error is ignored: \(error)")
+        // Failed to seek back, error is ignored
       }
       throw error
     }
+    if !onErrorOnly {
+      try seekBack()
+    }
+    return result
   }
 
 }
