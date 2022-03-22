@@ -18,7 +18,7 @@ public struct FDStream: RandomRead, Seek, RandomWrite {
     try fd.read(fromAbsoluteOffset: offset, into: buffer)
   }
 
-  public func write(_ buffer: UnsafeRawBufferPointer) throws -> Int {
+  public func write(from buffer: UnsafeRawBufferPointer) throws -> Int {
     try fd.write(buffer, retryOnInterrupt: false)
   }
 

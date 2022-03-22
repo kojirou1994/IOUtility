@@ -32,7 +32,7 @@ extension InputStream: Read {
 //}
 
 extension OutputStream: Write {
-  public func write(_ buffer: UnsafeRawBufferPointer) throws -> Int {
+  public func write(from buffer: UnsafeRawBufferPointer) throws -> Int {
     guard let baseAddress = buffer.baseAddress else {
       return 0
     }
