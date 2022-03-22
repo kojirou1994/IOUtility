@@ -2,7 +2,6 @@
 import XCTest
 import IOModule
 import IOStreams
-import SimpleImageInfo
 import AppleArchive
 import SystemPackage
 import System
