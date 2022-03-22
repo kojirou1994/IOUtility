@@ -26,8 +26,8 @@ public struct FDStream: RandomRead, Seek, RandomWrite {
     try fd.write(toAbsoluteOffset: offset, buffer, retryOnInterrupt: false)
   }
 
-  public func seek(offset: Int64, from whence: FileDescriptor.SeekOrigin) throws -> Int64 {
-    try fd.seek(offset: offset, from: whence)
+  public func seek(toOffset offset: Int64, from origin: FileDescriptor.SeekOrigin) throws -> Int64 {
+    try fd.seek(offset: offset, from: origin)
   }
 
 }

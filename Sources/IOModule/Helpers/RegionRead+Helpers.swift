@@ -1,5 +1,5 @@
 public extension RegionRead where Self: Seek {
-  mutating func read(exactly count: Int) throws -> Region {
+  mutating func read(exactCount count: Int) throws -> Region {
     try withOffsetUnchangedOnError { reader in
       let result = try reader.read(upToCount: count)
       let realCount = result.count
@@ -12,6 +12,6 @@ public extension RegionRead where Self: Seek {
 
   mutating func readToEnd() throws -> Region {
     let count = try streamLength() - currentOffset()
-    return try read(exactly: Int(count))
+    return try read(exactCount: Int(count))
   }
 }

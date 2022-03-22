@@ -59,9 +59,9 @@ extension MemoryInputStream: RandomRead {
 
 extension MemoryInputStream: Seek {
 
-  public mutating func seek(offset: Int64, from whence: FileDescriptor.SeekOrigin) throws -> Int64 {
+  public mutating func seek(toOffset offset: Int64, from origin: FileDescriptor.SeekOrigin) throws -> Int64 {
     let originIndex: C.Index
-    switch whence {
+    switch origin {
     case .start: originIndex = data.startIndex
     case .end: originIndex = data.endIndex
     case .current: originIndex = currentIndex

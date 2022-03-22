@@ -1,11 +1,11 @@
 public protocol RandomWrite: Write {
-  mutating func write(toAbsoluteOffset offset: Int64, _ buffer: UnsafeRawBufferPointer) throws -> Int
+  mutating func write(from buffer: UnsafeRawBufferPointer, atOffset offset: Int64) throws -> Int
 }
 
 extension RandomWrite where Self: Seek {
-  public mutating func write(toAbsoluteOffset offset: Int64, _ buffer: UnsafeRawBufferPointer) throws -> Int {
+  public mutating func write(from buffer: UnsafeRawBufferPointer, atOffset offset: Int64) throws -> Int {
     try withOffsetUnchanged { write in
-      try write.seek(offset: offset, from: .start)
+      try write.seek(toOffset: offset, from: .start)
       return try write.write(buffer)
     }
   }

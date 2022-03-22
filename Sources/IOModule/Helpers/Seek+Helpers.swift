@@ -1,29 +1,29 @@
 public extension Seek {
 
   mutating func rewind() throws {
-    _ = try seek(offset: 0, from: .start)
+    _ = try seek(toOffset: 0, from: .start)
   }
 
   /* unsafe */
   mutating func streamLength() throws -> Int64 {
     let oldPosition = try currentOffset()
-    let length = try seek(offset: 0, from: .end)
+    let length = try seek(toOffset: 0, from: .end)
     if oldPosition != length {
-      _ = try seek(offset: oldPosition, from: .start)
+      _ = try seek(toOffset: oldPosition, from: .start)
     }
     return length
   }
 
   mutating func currentOffset() throws -> Int64 {
-    try seek(offset: 0, from: .current)
+    try seek(toOffset: 0, from: .current)
   }
 
   mutating func isAtEnd() throws -> Bool {
     try currentOffset() == streamLength()
   }
 
-  mutating func skip(_ count: Int) throws {
-    _ = try seek(offset: Int64(count), from: .current)
+  mutating func skip<T: FixedWidthInteger>(_ count: T) throws {
+    _ = try seek(toOffset: Int64(count), from: .current)
   }
 
   mutating func withOffsetUnchangedOnError<R>(_ body: (inout Self) throws -> R) throws -> R {
@@ -37,7 +37,7 @@ public extension Seek {
   private mutating func _withOffsetUnchanged<R>(onErrorOnly: Bool, _ body: (inout Self) throws -> R) throws -> R {
     let oldPosition = try currentOffset()
     func seekBack() throws {
-      let fixedPosition = try seek(offset: oldPosition, from: .start)
+      let fixedPosition = try seek(toOffset: oldPosition, from: .start)
       assert(oldPosition == fixedPosition)
     }
     let result: R
