@@ -3,14 +3,9 @@ import SystemPackage
 import IOModule
 
 extension RegionRead where Self: Seek, Region.Element == UInt8, Region.SubSequence: ContiguousBytes {
-  public mutating func readAsMemoryStream(exactly count: Int) throws -> MemoryInputStream<Region> {
-    try withOffsetUnchangedOnError { v in
-      let region = try v.read(upToCount: count)
-      if region.count != count {
-        throw IOError.noEnoughBytes(expected: count, real: region.count)
-      }
-      return .init(region)
-    }
+  public mutating func readAsMemoryStream(exactCount count: Int) throws -> MemoryInputStream<Region> {
+    let region = try read(exactCount: count)
+    return .init(region)
   }
 }
 

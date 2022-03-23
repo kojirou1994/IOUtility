@@ -3,7 +3,7 @@ import SystemPackage
 import BitReader
 
 extension Read {
-  mutating func readExactly(into buffer: UnsafeMutableRawBufferPointer) throws {
+  mutating func read(exactlyInto buffer: UnsafeMutableRawBufferPointer) throws {
     let length = try read(into: .init(buffer))
     if length != buffer.count {
       throw IOError.noEnoughBytes(expected: buffer.count, real: length)
@@ -11,21 +11,13 @@ extension Read {
   }
 }
 
-extension Read where Self: Seek {
-  mutating func readExactlyOrSeekBack(into buffer: UnsafeMutableRawBufferPointer) throws {
-    try withOffsetUnchangedOnError { read in
-      try read.readExactly(into: buffer)
-    }
-  }
-}
+public extension Read {
 
-public extension Read where Self: Seek {
-
-  mutating func readInteger<T: FixedWidthInteger>(size: Int = MemoryLayout<T>.size, endian: Endianness = .big, as: T.Type = T.self) throws -> T {
-    precondition(1...MemoryLayout<T>.size ~= size)
+  mutating func readInteger<T: FixedWidthInteger>(byteCount: Int = MemoryLayout<T>.size, endian: Endianness = .big, as: T.Type = T.self) throws -> T {
+    precondition(1...MemoryLayout<T>.size ~= byteCount)
     var value: T = 0
     try withUnsafeMutableBytes(of: &value) { buffer in
-      try readExactlyOrSeekBack(into: .init(start: buffer.baseAddress, count: size))
+      try read(exactlyInto: .init(start: buffer.baseAddress, count: byteCount))
     }
     return endian.convert(value)
   }
@@ -35,10 +27,10 @@ public extension Read where Self: Seek {
   /// - Throws: read error
   /// - Returns: String
   @available(macOS 11.0, *)
-  mutating func readString(exactly count: Int) throws -> String {
-    try String(unsafeUninitializedCapacity: count) { buffer in
-      try readExactlyOrSeekBack(into: .init(buffer))
-      return count
+  mutating func readString(byteCount: Int) throws -> String {
+    try String(unsafeUninitializedCapacity: byteCount) { buffer in
+      try read(exactlyInto: .init(buffer))
+      return byteCount
     }
   }
 

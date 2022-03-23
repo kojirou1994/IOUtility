@@ -1,17 +1,20 @@
-public extension RegionRead where Self: Seek {
+public extension RegionRead {
   mutating func read(exactCount count: Int) throws -> Region {
-    try withOffsetUnchangedOnError { reader in
-      let result = try reader.read(upToCount: count)
-      let realCount = result.count
-      if realCount != count {
-        throw IOError.noEnoughBytes(expected: count, real: realCount)
-      }
-      return result
+    let result = try read(upToCount: count)
+    let realCount = result.count
+    if realCount != count {
+      throw IOError.noEnoughBytes(expected: count, real: realCount)
     }
+    return result
   }
+
+}
+
+public extension RegionRead where Self: Seek {
 
   mutating func readToEnd() throws -> Region {
     let count = try streamLength() - currentOffset()
     return try read(exactCount: Int(count))
   }
+
 }

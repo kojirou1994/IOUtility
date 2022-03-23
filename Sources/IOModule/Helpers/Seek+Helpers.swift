@@ -26,10 +26,12 @@ public extension Seek {
     _ = try seek(toOffset: Int64(count), from: .current)
   }
 
+//  @available(*, unavailable)
   mutating func withOffsetUnchangedOnError<R>(_ body: (inout Self) throws -> R) throws -> R {
     try _withOffsetUnchanged(onErrorOnly: true, body)
   }
 
+//  @available(*, unavailable)
   mutating func withOffsetUnchanged<R>(_ body: (inout Self) throws -> R) throws -> R {
     try _withOffsetUnchanged(onErrorOnly: false, body)
   }
