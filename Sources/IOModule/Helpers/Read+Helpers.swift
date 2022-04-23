@@ -29,7 +29,7 @@ public extension Read {
   mutating func readString(byteCount: Int) throws -> String {
     if #available(macOS 11.0, *) {
       return try String(unsafeUninitializedCapacity: byteCount) { buffer in
-        try read(exactlyInto: .init(buffer))
+        try read(exactlyInto: .init(start: buffer.baseAddress, count: byteCount))
         return byteCount
       }
     } else {
