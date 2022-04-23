@@ -26,11 +26,20 @@ public extension Read {
   /// - Parameter count: utf8 unit count
   /// - Throws: read error
   /// - Returns: String
-  @available(macOS 11.0, *)
   mutating func readString(byteCount: Int) throws -> String {
-    try String(unsafeUninitializedCapacity: byteCount) { buffer in
-      try read(exactlyInto: .init(buffer))
-      return byteCount
+    if #available(macOS 11.0, *) {
+      return try String(unsafeUninitializedCapacity: byteCount) { buffer in
+        try read(exactlyInto: .init(buffer))
+        return byteCount
+      }
+    } else {
+      let buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: byteCount, alignment: MemoryLayout<UInt8>.alignment)
+      defer {
+        buffer.initializeMemory(as: UInt8.self, repeating: 0)
+        buffer.deallocate()
+      }
+      try read(exactlyInto: buffer)
+      return String(decoding: buffer, as: UTF8.self)
     }
   }
 
