@@ -1,5 +1,6 @@
 public protocol Write {
   /// After writing, this method increments the file’s offset by the number of bytes written.
+  // can throw interrupted
   mutating func write(from buffer: UnsafeRawBufferPointer) throws -> Int
 }
 

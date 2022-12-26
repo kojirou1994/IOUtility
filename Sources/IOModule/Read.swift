@@ -1,4 +1,5 @@
 public protocol Read {
+  // don't throw interrupted
   mutating func read(into buffer: UnsafeMutableRawBufferPointer) throws -> Int
 }
 
