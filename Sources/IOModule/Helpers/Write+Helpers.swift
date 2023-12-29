@@ -1,5 +1,6 @@
 public extension Write {
 
+  /// retry when interruptted
   @discardableResult
   mutating func writeAll(_ buffer: UnsafeRawBufferPointer) throws -> Int {
     var idx = 0
