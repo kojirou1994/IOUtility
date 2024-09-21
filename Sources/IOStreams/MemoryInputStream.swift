@@ -2,7 +2,7 @@ import Foundation
 import SystemPackage
 import IOModule
 
-extension RegionRead where Self: Seek, Region.Element == UInt8, Region.SubSequence: ContiguousBytes {
+extension RegionRead where Self: ~Copyable & Seek, Region.Element == UInt8, Region.SubSequence: ContiguousBytes {
   public mutating func readAsMemoryStream(exactCount count: Int) throws -> MemoryInputStream<Region> {
     let region = try read(exactCount: count)
     return .init(region)
@@ -21,6 +21,8 @@ public struct MemoryInputStream<C> where C: Collection, C.Element == UInt8, C.Su
   }
 
 }
+
+extension MemoryInputStream: Sendable where C: Sendable, C.Index: Sendable {}
 
 extension MemoryInputStream: RandomRead {
 

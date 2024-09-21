@@ -1,4 +1,4 @@
-public extension RegionRead {
+public extension RegionRead where Self: ~Copyable {
   mutating func read(exactCount count: Int) throws -> Region {
     let result = try read(upToCount: count)
     let realCount = result.count
@@ -10,7 +10,7 @@ public extension RegionRead {
 
 }
 
-public extension RegionRead where Self: Seek {
+public extension RegionRead where Self: ~Copyable & Seek {
 
   mutating func readToEnd() throws -> Region {
     let count = try streamLength() - currentOffset()

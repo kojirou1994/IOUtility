@@ -3,3 +3,5 @@ public enum IOError: Error {
   case seekOverbound
   case unsupportedSeekOrigin
 }
+
+extension IOError: Sendable {}

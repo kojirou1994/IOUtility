@@ -1,4 +1,4 @@
-public extension Seek {
+public extension Seek where Self: ~Copyable {
 
   mutating func rewind() throws {
     _ = try seek(toOffset: 0, from: .start)

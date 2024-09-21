@@ -1,4 +1,4 @@
-public protocol RegionRead where Region: Collection, Region.Element == UInt8 {
+public protocol RegionRead: ~Copyable where Region: Collection, Region.Element == UInt8 {
   associatedtype Region
 
   mutating func read(upToCount count: Int) throws -> Region
@@ -6,7 +6,7 @@ public protocol RegionRead where Region: Collection, Region.Element == UInt8 {
 
 import struct Foundation.Data
 
-extension RegionRead where Self: Read {
+extension RegionRead where Self: ~Copyable, Self: Read {
   public mutating func read(upToCount count: Int) throws -> Region where Region == Array<UInt8> {
     try .init(unsafeUninitializedCapacity: count) { buffer, initializedCount in
       initializedCount = try read(into: .init(buffer))

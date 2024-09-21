@@ -1,6 +1,6 @@
 private let DEFAULT_BUF_SIZE = 8 * 1024
 
-extension Read {
+extension Read where Self: ~Copyable {
   public mutating func copy<W: Write>(to writer: inout W) throws -> Int {
     var length = 0
     try withUnsafeTemporaryAllocation(byteCount: DEFAULT_BUF_SIZE, alignment: MemoryLayout<UInt8>.alignment) { buffer in

@@ -2,7 +2,7 @@ import Endianness
 import SystemPackage
 import IOModule
 
-public struct FDStream: RandomRead, Seek, RandomWrite {
+public struct FDStream: RandomRead, Seek, RandomWrite, ~Copyable, Sendable {
 
   public let fd: FileDescriptor
 

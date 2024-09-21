@@ -2,7 +2,7 @@ import Endianness
 import SystemPackage
 import BitReader
 
-extension Read {
+extension Read where Self: ~Copyable {
   mutating func read(exactlyInto buffer: UnsafeMutableRawBufferPointer) throws {
     let length = try read(into: .init(buffer))
     if length != buffer.count {
@@ -11,7 +11,7 @@ extension Read {
   }
 }
 
-public extension Read {
+public extension Read where Self: ~Copyable {
 
   mutating func readInteger<T: FixedWidthInteger>(byteCount: Int = MemoryLayout<T>.size, endian: Endianness = .big, as: T.Type = T.self) throws -> T {
     precondition(1...MemoryLayout<T>.size ~= byteCount)
